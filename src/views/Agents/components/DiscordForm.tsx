@@ -7,7 +7,7 @@ import { Button } from "components/Button"
 import { ButtonMenu, ButtonMenuItem } from "components/ButtonMenu"
 import { AgentView } from "../types"
 
-function ChatForm({
+function DiscordForm({
   modalView,
   setModalView
 }: {
@@ -54,13 +54,13 @@ function ChatForm({
       </Flex>
       <Box>
         <Text fontSize={isDesktop ? 20 : (isTablet ? 16 : 14)}>
-          {modalView === AgentView.Telegram ? "Bind Telegram Interface" : "Bind Discord Interface"}
+          Bind Discord Interface
         </Text>
       </Box>
       <Flex style={{gap: "8px"}} justifyContent="space-between" flexDirection={isDesktop ? "row" : "column"}>
         <Input 
           id="token-search-input"
-          placeholder={modalView === AgentView.Telegram ? `Telegram bot token` : `Discord bot Token`}
+          placeholder='Discord bot Token'
           scale="md"
           autoComplete="off"
           value={address}
@@ -78,4 +78,4 @@ function ChatForm({
   )
 }
 
-export default ChatForm
+export default DiscordForm

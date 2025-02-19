@@ -4,11 +4,15 @@ export enum CreateFormView {
 }
 
 export interface AgentPrompt {
-  mode: 0 | 1 | 2;
+  agentType: "Safe" | "Neutral" | "Wild";
   name: string;
   description: string;
   personality: string;
   instruction: string;
+}
+
+export interface AgentEditPrompt extends AgentPrompt {
+  id: string
 }
 
 export interface AgentToken {
@@ -33,13 +37,44 @@ export enum AgentView {
 export interface Agent {
   id: string;
   name: string;
-  src: string;
-  isVerified: false;
-  telegram: string;
-  discord: string;
-  twitter: string;
-  token: string;
+  agentType: string;
   description: string;
   personality: string;
-  Instruction: string;
+  instruction: string;
+  knowledge: string;
+  knowledgeLink: string;
+  token: string;
+  owner: string;
+  status: string;
+  logo: string;
+  isVerified: false;
+  social: {
+    twitter: string;
+    telegram: string;
+    discord: string;
+    website: string;
+  }
+  createdAt: number;
+  settings: {
+    twitter?: {
+      agentType?: string,
+      accessToken?: string,
+      refreshToken?: string,
+      profileId?: string,
+      profileName?: string,
+      profileUserName?: string
+    },
+    telegram?: {
+      botType?: string,
+      botName?: string,
+      botUserName?: string,
+      goal?: string,
+      botFatherAPIKey?: string
+    },
+    discord?: {
+      apiKey?: string
+    }
+  },
+  creditUsed: number;
+  creditRemaining: number;
 }

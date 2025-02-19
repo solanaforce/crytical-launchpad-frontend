@@ -6,17 +6,21 @@ import { Input } from "components/Input"
 import { Button } from "components/Button"
 import { ButtonMenu, ButtonMenuItem } from "components/ButtonMenu"
 import { ToolTipIcon } from "components/Tooltip"
-import { AgentView } from "../types"
+import { Agent, AgentView } from "../types"
 
 function WebpageForm({
   modalView,
-  setModalView
+  setModalView,
+  setTime,
+  agent
 }: {
   modalView: AgentView,
   setModalView: Dispatch<SetStateAction<AgentView>>
+  setTime: Dispatch<SetStateAction<number>>
+  agent: Agent
 }) {
   const { isMobile, isTablet, isDesktop } = useMatchBreakpoints()
-  const [address, setAddress] = useState("")
+  const [address, setAddress] = useState(agent.knowledgeLink)
 
   return (
     <Flex 
@@ -52,14 +56,6 @@ function WebpageForm({
           }}>
             Webpage Uploads
           </ButtonMenuItem>
-          {/* <ButtonMenuItem height="42px" style={{
-            borderTopLeftRadius: "0", 
-            borderBottomLeftRadius: "0",
-            borderTopRightRadius: "8px",
-            borderBottomRightRadius: "8px"
-          }}>
-            APIs
-          </ButtonMenuItem> */}
         </ButtonMenu>
       </Flex>
       <Flex style={{gap: "12px"}}>

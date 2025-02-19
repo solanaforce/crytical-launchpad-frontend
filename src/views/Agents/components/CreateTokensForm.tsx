@@ -51,13 +51,6 @@ function CreateTokensForm({
       <Flex style={{gap: "12px"}} flexDirection={isMobile ? "column" : "row"}>
         <Button
           scale="md"
-          variant="secondary"
-          onClick={() => setModalView(CreateFormView.Prompt)}
-        >
-          Back: Prompt Your Agent
-        </Button>
-        <Button
-          scale="md"
           variant="primary"
         >
           Create Agent

@@ -1,22 +1,55 @@
 import { Dispatch, SetStateAction, useState } from "react"
 import { Flex } from "components/Box"
 import { Text } from "components/Text"
-import { useMatchBreakpoints } from "contexts"
+import { useMatchBreakpoints, useToast } from "contexts"
 import { TextArea } from "components/Input"
 import { Button } from "components/Button"
 import { ButtonMenu, ButtonMenuItem } from "components/ButtonMenu"
 import { ToolTipIcon } from "components/Tooltip"
-import { AgentView } from "../types"
+import { Agent, AgentView } from "../types"
+import { editAgent } from "api/Agents"
 
 function KnowledgeForm({
   modalView,
-  setModalView
+  setModalView,
+  setTime,
+  agent
 }: {
   modalView: AgentView,
   setModalView: Dispatch<SetStateAction<AgentView>>
+  setTime: Dispatch<SetStateAction<number>>
+  agent: Agent
 }) {
+  const { toastSuccess, toastError } = useToast()
+
   const { isMobile, isTablet, isDesktop } = useMatchBreakpoints()
-  const [ description, setDescription ] = useState("")
+  const [ knowledge, setKnowledge ] = useState(agent.knowledge)
+
+  const handleEdit = async () => {
+    const result = await editAgent({
+      id: agent.id,
+      agentType: agent.agentType,
+      name: agent.name,
+      description: agent.description,
+      personality: agent.personality,
+      instruction: agent.instruction,
+      knowledge,
+      knowledgeLink: agent.knowledgeLink
+    })
+    
+    if (result && !result.err) {
+      toastSuccess(
+        `Update successfully`,
+        <></>
+      )
+      setTime(Date.now())
+    } else {
+      toastError(
+        `Update failed`,
+        <></>
+      )
+    }
+    }
 
   return (
     <Flex 
@@ -68,14 +101,15 @@ function KnowledgeForm({
           placeholder="Project information, Twitter text, article text, whitepaper text..."
           scale="md"
           autoComplete="off"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={knowledge}
+          onChange={(e) => setKnowledge(e.target.value)}
         />
       </Flex>
       <Flex justifyContent="center">
         <Button
           variant="primary"
           scale="md"
+          onClick={handleEdit}
         >
           Save
         </Button>

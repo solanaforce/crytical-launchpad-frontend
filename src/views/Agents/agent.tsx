@@ -1,35 +1,58 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Page from 'Page'
 import { Flex } from 'components/Box'
 import { useMatchBreakpoints } from 'contexts'
+import { getUserAgent } from 'api/Agents'
+import { useAppKitAccount } from '@reown/appkit/react'
 import AgentHeader from './components/AgentHeader'
 import { AgentView } from './types'
-import { SampleAgents } from './sample'
 import AgentSteps from './components/AgentSteps'
-import ChatForm from './components/ChatForm'
+import TelegramForm from './components/TelegramForm'
 import SocialForm from './components/SocialForm'
 import BindTokenForm from './components/BindTokenForm'
 import KnowledgeForm from './components/Knowledge'
 import WebpageForm from './components/Webpage'
 import EditPromptForm from './components/EditPrompt'
 import ScenarioForm from './components/ScenarioForm'
+import DiscordForm from './components/DiscordForm'
 
 const Agent = ({id} : {id: string}) => {
   const { isDesktop } = useMatchBreakpoints()
   const [modalView, setModalView] = useState<AgentView>(AgentView.Telegram)
-  const agent = SampleAgents.find((s) => s.id === id)
 
-  if (!agent) return null
+  const [time, setTime] = useState(Date.now())
+
+  const { address, isConnected } = useAppKitAccount()
+
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<any>(null)
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await getUserAgent(id);
+        setData(result.result)
+      } catch (err) {
+        setError(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    if (!isConnected || !address)
+      setData(null)
+    if (isConnected && address) {
+      getData()
+    }
+  }, [address, isConnected, time])
+
+  if (!data || data.err) return null
+
   return (
     <Page>
       <AgentHeader
-        name={agent.name}
-        src={agent.src}
-        isVerified={agent.isVerified}
-        telegram={agent.telegram}
-        discord={agent.discord}
-        twitter={agent.twitter}
-        token={agent.token}
+        agent={data}
         setModalView={setModalView}
       />
       <Flex
@@ -38,9 +61,18 @@ const Agent = ({id} : {id: string}) => {
         justifyContent="space-between"
         mt="32px"
       >
-      {(modalView === AgentView.Telegram || modalView === AgentView.Discord) && <>
+      {(modalView === AgentView.Telegram) && <>
         <AgentSteps step={0} setModalView={setModalView} />
-        <ChatForm
+        <TelegramForm
+          modalView={modalView}
+          setModalView={setModalView}
+          agent={data}
+          setTime={setTime}
+        />
+      </>}
+      {(modalView === AgentView.Discord) && <>
+        <AgentSteps step={0} setModalView={setModalView} />
+        <DiscordForm
           modalView={modalView}
           setModalView={setModalView}
         />
@@ -57,7 +89,9 @@ const Agent = ({id} : {id: string}) => {
         <AgentSteps step={3} setModalView={setModalView} />
         <KnowledgeForm
           modalView={modalView}
-          setModalView={setModalView} 
+          setModalView={setModalView}
+          setTime={setTime}
+          agent={data}
         />
       </>}
       {(modalView === AgentView.Webpage) && <>
@@ -65,6 +99,8 @@ const Agent = ({id} : {id: string}) => {
         <WebpageForm 
           modalView={modalView}
           setModalView={setModalView} 
+          setTime={setTime}
+          agent={data}
         />
       </>}
       {(modalView === AgentView.Prompt) && <>
@@ -72,7 +108,8 @@ const Agent = ({id} : {id: string}) => {
         <EditPromptForm
           modalView={modalView}
           setModalView={setModalView}
-          agent={agent}
+          agent={data}
+          setTime={setTime}
         />
       </>}
       {(modalView === AgentView.Scenario) && <>

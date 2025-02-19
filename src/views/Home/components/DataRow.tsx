@@ -1,9 +1,9 @@
 import { Text } from "components/Text";
+import { Flex } from "components/Box";
+import { NextLinkFromReactRouter } from "components/NextLink";
 import { ResponsiveGrid } from "../style";
 import { Agent } from "../types";
-import { Flex } from "components/Box";
 import { getCreditString, getMcapString } from "../utils";
-import { NextLinkFromReactRouter } from "components/NextLink";
 
 const DataRow = ({agent, id} : {agent: Agent, id: number}) => {
   return (

@@ -1,13 +1,15 @@
-import { useAppKitAccount } from "@reown/appkit/react"
+import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react"
 import throttle from "lodash/throttle"
 import React, { ElementType, useEffect, useMemo, useRef, useState } from "react"
 import { Flex } from "components/Box"
 import { NextLinkFromReactRouter } from "components/NextLink"
-// import { useMatchBreakpoints } from "contexts"
 import { Input } from "components/Input"
 import ConnectWalletButton from "components/ConnectWalletButton"
 import { Text } from "components/Text"
 import { useMatchBreakpoints } from "contexts"
+import { useRouter } from "next/router"
+import type { Provider } from "@reown/appkit-adapter-solana/react"
+import { signIn } from "api/Auth"
 import { MenuContext } from "./context"
 import { AtomBox } from "../AtomBox"
 import { StyledLink, Wrapper, FixedContainer, StyledNav, SearchBox, BodyWrapper } from "./style"
@@ -19,8 +21,11 @@ const LinkComponent = (linkProps) => {
 const Menu = (props) => {
   const {children} = props
 
-  const { address } = useAppKitAccount()
-  const { isMobile } = useMatchBreakpoints()
+  const { pathname } = useRouter()
+  const token = localStorage.getItem('access_token');
+
+  const { address, caipAddress, isConnected } = useAppKitAccount()
+  const { isDesktop, isMobile } = useMatchBreakpoints()
 
   const linkComponent: ElementType = LinkComponent
   const [showMenu, setShowMenu] = useState(true)
@@ -59,6 +64,12 @@ const Menu = (props) => {
 
   const providerValue = useMemo(() => ({ linkComponent }), [linkComponent]);
 
+  const { walletProvider } = useAppKitProvider<Provider>('solana')
+
+  useEffect(() => {
+    signIn(isConnected, walletProvider)
+  }, [isConnected])
+
   return (
     <MenuContext.Provider value={providerValue}>
       <AtomBox
@@ -77,16 +88,16 @@ const Menu = (props) => {
                   <img src="/images/mobile-logo.png" alt="logo" className="mobile-icon" />
                 </StyledLink>
               </Flex>
-              <Flex alignItems="center" style={{gap: "12px"}}>
+              {address && isDesktop && <Flex alignItems="center" style={{gap: "24px"}}>
                 <StyledLink href="/agents/create" as={linkComponent} aria-label="Create an agent">
-                  <Text>Create Agent</Text>
+                  <Text color={pathname.includes('/agents/create') ? "#d0b6ff" : "#ffffff"}>Create Agent</Text>
                 </StyledLink>
                 <StyledLink href="/agents" as={linkComponent} aria-label="My Agents">
-                  <Text>My Agents</Text>
+                  <Text color={pathname === '/agents' ? "#d0b6ff" : "#ffffff"}>My Agents</Text>
                 </StyledLink>
-              </Flex>
+              </Flex>}
               <Flex alignItems="center" style={{gap: "12px"}}>
-                <SearchBox>
+                {!isMobile && <SearchBox>
                   <Flex alignItems="center" mr="-10px">
                     <svg width="24" height="24" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" >
                       <path d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z" fill="#444444" fillRule="evenodd" clipRule="evenodd" />
@@ -98,7 +109,7 @@ const Menu = (props) => {
                     height="100%"
                     style={{background: "transparent"}}
                   />
-                </SearchBox>
+                </SearchBox>}
                 {address && <appkit-button size="sm" />}
                 {!address && <ConnectWalletButton isPushed={!isMobile} />}
               </Flex>

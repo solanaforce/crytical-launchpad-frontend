@@ -68,6 +68,7 @@ const StyledAlert = styled(Flex)`
   background-color: #ffffff15;
   border-radius: 8px;
   box-shadow: 0px 20px 36px -8px rgba(14, 14, 44, 0.1), 0px 1px 1px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
 `;
 
 const Alert: React.FC<React.PropsWithChildren<AlertProps>> = ({ title, children, variant, onClick }) => {
@@ -76,7 +77,7 @@ const Alert: React.FC<React.PropsWithChildren<AlertProps>> = ({ title, children,
   return (
     <StyledAlert>
       <IconLabel variant={variant} hasDescription={!!children}>
-        <Icon color="currentColor" width="24px" />
+        <Icon color="#ffffff" width="24px" />
       </IconLabel>
       <Details hasHandler={!!onClick}>
         <Text bold>{title}</Text>
@@ -91,7 +92,7 @@ const Alert: React.FC<React.PropsWithChildren<AlertProps>> = ({ title, children,
       {onClick && (
         <CloseHandler>
           <IconButton scale="sm" variant="text" onClick={onClick}>
-            <CloseIcon width="24px" color="currentColor" />
+            <CloseIcon width="24px" color="#ffffff" />
           </IconButton>
         </CloseHandler>
       )}

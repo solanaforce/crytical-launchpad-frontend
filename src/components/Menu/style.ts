@@ -10,14 +10,14 @@ export const StyledLink = styled.a`
   display: flex;
   .mobile-icon {
     width: 26px;
-    ${({ theme }) => theme.mediaQueries.xl} {
+    ${({ theme }) => theme.mediaQueries.sm} {
       display: none;
     }
   }
   .desktop-icon {
     width: 160px;
     display: none;
-    ${({ theme }) => theme.mediaQueries.xl} {
+    ${({ theme }) => theme.mediaQueries.sm} {
       display: block;
     }
   }
@@ -25,6 +25,9 @@ export const StyledLink = styled.a`
     animation-delay: 20ms;
   }
   &:hover {
+    div {
+      color: #d0b6ff;
+    }
     .eye {
       transform-origin: center 60%;
       animation-name: ${blink};

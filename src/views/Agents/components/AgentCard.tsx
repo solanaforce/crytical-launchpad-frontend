@@ -35,7 +35,15 @@ function AgentCard({
           </Flex>
         </Flex>
         <Flex>
-          <Text>{agent.description}</Text>
+          <Text
+            style={{
+              WebkitLineClamp: 2, 
+              WebkitBoxOrient: "vertical", 
+              textOverflow: "ellipsis", 
+              display: "-webkit-box", 
+              overflow: "hidden"
+            }}
+          >{agent.description}</Text>
         </Flex>
         <Divider />
         <Flex>

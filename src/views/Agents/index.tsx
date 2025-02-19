@@ -3,8 +3,10 @@ import { Flex } from 'components/Box'
 import styled from 'styled-components'
 import { Button } from 'components/Button'
 import { NextLinkFromReactRouter } from 'components/NextLink'
+import { useAppKitAccount } from '@reown/appkit/react'
+import { getUserAgents } from 'api/Agents'
+import { useEffect, useState } from 'react'
 import AgentCard from './components/AgentCard'
-import { SampleAgents } from './sample'
 
 const FlexLayout = styled.div`
   display: grid;
@@ -25,6 +27,31 @@ const FlexLayout = styled.div`
 `;
 
 const Agents: React.FC<React.PropsWithChildren> = () => {
+
+  const { address, caipAddress, isConnected } = useAppKitAccount()
+
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<any>(null)
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await getUserAgents();
+        setData(result.result)
+      } catch (err) {
+        setError(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    setData(null)
+    if (isConnected && address) {
+      getData()
+    }
+  }, [address, isConnected])
+
   return (
     <Page>
       <Flex mb="20px">
@@ -38,7 +65,7 @@ const Agents: React.FC<React.PropsWithChildren> = () => {
         </Button>
       </Flex>
       <FlexLayout>
-        {SampleAgents && SampleAgents.length > 0 && SampleAgents.map((agent) => {
+        {!loading && data && data.length > 0 && data.map((agent) => {
           return <AgentCard
             key={agent.id}
             agent={agent}
