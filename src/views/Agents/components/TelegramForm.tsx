@@ -5,9 +5,9 @@ import { useMatchBreakpoints, useToast } from "contexts"
 import { Input } from "components/Input"
 import { Button } from "components/Button"
 import { ButtonMenu, ButtonMenuItem } from "components/ButtonMenu"
-import { Agent, AgentView } from "../types"
 import { bindTelegram, unbindTelegram } from "api/Agents"
 import { getBotUsername, testgetUpdates } from "api/Telegram"
+import { Agent, AgentView } from "../types"
 
 function TelegramForm({
   modalView,

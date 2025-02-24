@@ -6,8 +6,8 @@ import { TextArea } from "components/Input"
 import { Button } from "components/Button"
 import { ButtonMenu, ButtonMenuItem } from "components/ButtonMenu"
 import { ToolTipIcon } from "components/Tooltip"
-import { Agent, AgentView } from "../types"
 import { editAgent } from "api/Agents"
+import { Agent, AgentView } from "../types"
 
 function KnowledgeForm({
   modalView,

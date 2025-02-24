@@ -6,11 +6,11 @@ import { Checkbox } from "components/Checkbox"
 import { ToolTipIcon } from "components/Tooltip"
 import { Input, TextArea } from "components/Input"
 import { Button } from "components/Button"
+import { createAgent } from "api/Agents"
+import { useRouter } from "next/router"
 import { descriptionEx, instructionEx, nameEx, personalityEx } from "../constants"
 import { AgentView, CreateFormView } from "../types"
 import useAgents from "../hooks/useAgents"
-import { createAgent } from "api/Agents"
-import { useRouter } from "next/router"
 
 function PromptForm({
   setModalView

@@ -6,6 +6,7 @@ export async function getBotUsername(apiToken) {
       const response = await axios.get(url);
       if (response.data.ok) {
           return response.data.result.username; // Return the bot's username
+      // eslint-disable-next-line no-else-return
       } else {
           console.error("Failed to fetch bot info:", response.data.description);
           return null;
